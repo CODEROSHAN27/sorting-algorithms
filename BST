@@ -1,0 +1,154 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Node
+{
+public:
+    int data;
+    Node *left, *right;
+    Node()
+    {
+        this->data = 0;
+        left = NULL;
+    }
+    Node(int data)
+    {
+        this->data = data; 
+        this->left = NULL;
+        this->right = NULL;
+    }
+    Node(int data, Node* left, Node* right)
+    {
+        this->data = data;
+        this->left = left;
+        this->right = right;
+    }
+};
+
+
+Node* createTree(vector<int>&arr){
+ Node *root=nullptr;
+ int i=0;
+while(i<arr.size())
+{
+  if(root==nullptr)
+  {
+    root=new Node(arr[i]);
+    i++;
+  }
+  else{
+    Node *t=root;
+    Node *r;
+    while(t!=nullptr)
+    {
+      
+      if(arr[i]>t->data)
+      {
+        r=t;
+        t=t->right;
+      }
+       else
+      {
+        r=t;
+        t=t->left;
+      }
+    }
+    Node *p=new Node(arr[i]);
+    if(arr[i]<r->data)
+    {
+      r->left=p;
+    }
+    if(arr[i]>r->data)
+    {
+      r->right=p;
+    }
+    i++;
+   
+  }
+}
+ return root;
+
+}
+Node * ino(Node *root)        //inorder predessesor or successor
+{
+   if (root->left!=nullptr)
+   {
+    root=root->left;
+    Node *p=root;
+    while(root!=nullptr)
+    {
+      p=root;
+      root=root->right;
+    }
+    
+    return p;
+   }
+   root=root->right;
+    Node *p=root;
+    while(root!=nullptr)
+    {
+      p=root;
+      root=root->left;
+    }
+    
+    return p;
+   
+
+}
+Node * delbst(Node *root,int key)
+{
+  if(root==NULL)
+  {
+    return NULL;
+  }
+  
+   if(root->left==nullptr && root->right==nullptr)
+  {
+    free(root);
+    return nullptr;
+  }
+  
+  
+  if(key>root->data)
+  {
+    root->right=delbst(root->right,key);
+  }
+  if(key<root->data)
+  {
+    root->left=delbst(root->left,key);
+  }
+  if(root->data==key)
+  {
+    
+    Node *q=ino(root);
+    int x=root->data;
+    root->data=q->data;
+    if(q->data>x)
+    {delbst(root->right,q->data);
+    }
+    if(q->data<x)
+    {delbst(root->left,q->data);
+    }
+    
+  }
+  
+  
+ 
+  return root;
+}
+void di(Node *p)    //display inorder
+{
+  if(p!=nullptr){
+  di(p->left);
+  cout<<p->data<<" ";
+  di(p->right);}
+}
+
+int main()
+{
+  vector<int> arr={10,6,20,15,25,5,9};
+  di(createTree(arr));
+  cout<<endl;
+ di(delbst(createTree(arr),10));
+ //Node *x=ino(createTree(arr));
+ //cout<<x->data;
+}
